@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Live Count · TrueCount</title>
+
+  <meta name="description" content="Track a live blackjack running count and true count across five counting systems, with deck penetration, bet sizing and the Illustrious 18 index plays surfaced in real time.">
+  <meta name="keywords" content="running count, true count, hi-lo, KO count, deck penetration, bet spread, illustrious 18">
+  <meta name="author" content="Andrei Bertea">
+  <meta name="theme-color" content="#08120e">
+  <link rel="canonical" href="counter.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23e3b95f'/><text x='16' y='24' font-size='22' text-anchor='middle' fill='%230b1a13'>♠</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-site-header></header>
+
+  <main class="page" id="main">
+    <div class="container stack stack--wide">
+
+      <!-- Page intro -->
+      <section>
+        <p class="section-label">Live count</p>
+        <div class="row row--between row--middle">
+          <div class="grow">
+            <h1>Count the shoe</h1>
+            <p class="lede">Tap every card as it comes out. TrueCount keeps the running count, converts it to a true count, and tells you what to bet.</p>
+          </div>
+          <button class="btn" type="button" id="shortcuts-btn" aria-expanded="false" aria-controls="shortcuts-panel">
+            ⌨ Keyboard shortcuts
+          </button>
+        </div>
+
+        <div class="alert alert--info" id="shortcuts-panel" hidden>
+          <div>
+            <strong>Shortcuts</strong> —
+            <code>A</code> ace ·
+            <code>2</code>–<code>9</code> number cards ·
+            <code>0</code> or <code>T</code> ten ·
+            <code>J</code> <code>Q</code> <code>K</code> face cards ·
+            <code>Backspace</code> undo ·
+            <code>R</code> new shoe.
+          </div>
+        </div>
+      </section>
+
+      <!-- Shoe setup: a form-like control panel -->
+      <section class="card" aria-labelledby="setup-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="setup-heading">Shoe setup</h2>
+          <span class="pill" id="system-kind">Balanced</span>
+        </div>
+
+        <div class="row row--wide">
+          <div class="field field--inline">
+            <label class="label" for="system">Counting system</label>
+            <select class="select" id="system"></select>
+          </div>
+
+          <div class="field field--inline">
+            <label class="label" for="decks">Decks in the shoe</label>
+            <select class="select" id="decks">
+              <option value="1">1 deck</option>
+              <option value="2">2 decks</option>
+              <option value="4">4 decks</option>
+              <option value="6" selected>6 decks</option>
+              <option value="8">8 decks</option>
+            </select>
+          </div>
+
+          <div class="field field--inline">
+            <label class="label" for="unit">Betting unit (€)</label>
+            <input class="input" type="number" id="unit" value="25" min="1" max="1000" step="1"
+                   inputmode="numeric" aria-describedby="unit-error">
+            <p class="field__error" id="unit-error" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <p class="muted" id="system-blurb" style="margin-top:1rem;font-size:.875rem"></p>
+      </section>
+
+      <!-- The readout -->
+      <section class="card card--felt" aria-labelledby="readout-heading">
+        <h2 class="visually-hidden" id="readout-heading">Current count</h2>
+
+        <div class="readout" role="group" aria-live="polite" aria-atomic="true">
+          <div class="readout__cell readout__cell--hero">
+            <span class="readout__label" id="true-count-label">True count</span>
+            <span class="readout__value" id="true-count">0.0</span>
+            <span class="readout__note" id="true-count-note">Neutral shoe</span>
+          </div>
+
+          <div class="readout__cell">
+            <span class="readout__label">Running</span>
+            <span class="readout__value" id="running-count">0</span>
+            <span class="readout__note" id="running-note">from 0</span>
+          </div>
+
+          <div class="readout__cell">
+            <span class="readout__label">Decks left</span>
+            <span class="readout__value" id="decks-left">6.0</span>
+            <span class="readout__note" id="cards-seen-note">0 cards seen</span>
+          </div>
+
+          <div class="readout__cell">
+            <span class="readout__label">Player edge</span>
+            <span class="readout__value" id="edge">−0.5%</span>
+            <span class="readout__note">approximate</span>
+          </div>
+        </div>
+
+        <!-- Penetration -->
+        <div class="stack stack--tight" style="margin-top:1.5rem">
+          <div class="row row--between row--middle">
+            <span class="label">Shoe penetration</span>
+            <span class="faint" id="penetration-label">0% dealt</span>
+          </div>
+          <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+               aria-label="Shoe penetration" id="penetration-meter">
+            <div class="meter__fill" id="penetration-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bet advice -->
+      <section class="card" aria-labelledby="bet-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="bet-heading">What to bet</h2>
+          <span class="pill" id="bet-tone">Table minimum</span>
+        </div>
+        <div class="row row--between row--middle row--wide">
+          <div class="grow">
+            <p class="muted" id="bet-note" style="margin:0">No edge — bet the minimum or sit out.</p>
+          </div>
+          <div style="text-align:right">
+            <div class="stat__value" id="bet-amount">€25</div>
+            <div class="faint" id="bet-units">1 unit</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Card pad -->
+      <section class="card" aria-labelledby="pad-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="pad-heading">Deal a card</h2>
+          <div class="row row--tight">
+            <button class="btn" type="button" id="undo-btn" disabled>↶ Undo</button>
+            <button class="btn btn--danger" type="button" id="reset-btn">New shoe</button>
+          </div>
+        </div>
+
+        <div class="cardpad" id="cardpad" role="group" aria-label="Card ranks"></div>
+        <p class="faint" style="margin-top:1rem">
+          The small number on each card is its tag value in the selected system. Cards grey out when the shoe runs out of that rank.
+        </p>
+      </section>
+
+      <div class="row row--wide">
+        <!-- Index plays -->
+        <section class="card grow" style="flex-basis:340px" aria-labelledby="index-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="index-heading">Live index plays</h2>
+            <span class="pill" id="index-count">0 active</span>
+          </div>
+          <p class="faint" style="margin-top:-.5rem">Deviations from basic strategy that the current true count switches on.</p>
+          <ul class="list scroll-y" id="index-list" aria-live="polite"></ul>
+        </section>
+
+        <!-- History -->
+        <section class="card grow" style="flex-basis:340px" aria-labelledby="history-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="history-heading">Cards seen</h2>
+            <button class="btn btn--sm btn--ghost" type="button" id="save-session-btn">Save session</button>
+          </div>
+          <ul class="list scroll-y" id="history-list" aria-live="polite"></ul>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <div class="toast-stack" role="status" aria-live="polite"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/counter.js"></script>
+</body>
+</html>

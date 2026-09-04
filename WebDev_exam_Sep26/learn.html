@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Systems &amp; Strategy · TrueCount</title>
+
+  <meta name="description" content="Compare five blackjack counting systems tag by tag, read a full basic-strategy chart for hard totals, soft totals and pairs, and search the Illustrious 18 index plays.">
+  <meta name="keywords" content="basic strategy chart, hi-lo tags, KO count, zen count, omega II, illustrious 18, blackjack index plays">
+  <meta name="author" content="Andrei Bertea">
+  <meta name="theme-color" content="#08120e">
+  <link rel="canonical" href="learn.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23e3b95f'/><text x='16' y='24' font-size='22' text-anchor='middle' fill='%230b1a13'>♠</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-site-header></header>
+
+  <main class="page" id="main">
+    <div class="container stack stack--wide">
+
+      <section>
+        <p class="section-label">Reference</p>
+        <h1>Systems &amp; strategy</h1>
+        <p class="lede">
+          The tags, the chart and the deviations — everything the counter page assumes you already know.
+        </p>
+      </section>
+
+      <!-- Fetch demo: draw a real card and show its tag everywhere -->
+      <section class="card card--felt" aria-labelledby="draw-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="draw-heading">Tag a real card</h2>
+          <button class="btn btn--primary" type="button" id="draw-btn">Draw a card</button>
+        </div>
+        <p class="muted" style="margin-top:-.5rem;font-size:.875rem">
+          Pulls a card from a freshly shuffled deck on <code>deckofcardsapi.com</code> and shows what every system calls it.
+        </p>
+
+        <div class="row row--wide row--middle" style="margin-top:1.25rem">
+          <div id="draw-card-slot" style="flex:0 0 auto">
+            <div class="playing-card playing-card--back playing-card--xl" aria-hidden="true">?</div>
+          </div>
+          <div class="grow">
+            <div id="draw-tags" class="chip-row">
+              <span class="faint">Press “Draw a card” to fetch one.</span>
+            </div>
+            <p class="faint" id="draw-meta" style="margin-top:.75rem"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- System comparison -->
+      <section class="card" aria-labelledby="tags-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="tags-heading">Tag values, side by side</h2>
+          <div class="field" style="min-width:220px">
+            <label class="visually-hidden" for="system-filter">Show system</label>
+            <select class="select" id="system-filter">
+              <option value="all">All systems</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table" id="tags-table">
+            <caption class="visually-hidden">Point value assigned to each card rank by each counting system</caption>
+            <thead id="tags-head"></thead>
+            <tbody id="tags-body"></tbody>
+          </table>
+        </div>
+
+        <div id="system-notes" class="stack stack--tight" style="margin-top:1.25rem"></div>
+      </section>
+
+      <!-- Basic strategy -->
+      <section class="card" aria-labelledby="strategy-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="strategy-heading">Basic strategy</h2>
+          <span class="pill pill--info">Multi-deck · dealer stands soft 17 · double after split</span>
+        </div>
+
+        <div class="chip-row" id="strategy-tabs" role="tablist" aria-label="Strategy chart sections">
+          <button class="chip" type="button" role="tab" data-chart="hard" aria-selected="true"  aria-pressed="true">Hard totals</button>
+          <button class="chip" type="button" role="tab" data-chart="soft" aria-selected="false" aria-pressed="false">Soft totals</button>
+          <button class="chip" type="button" role="tab" data-chart="pairs" aria-selected="false" aria-pressed="false">Pairs</button>
+        </div>
+
+        <div class="table-wrap" style="margin-top:1rem">
+          <table class="table" id="strategy-table">
+            <caption class="visually-hidden">Basic strategy: correct play for each player hand against each dealer upcard</caption>
+            <thead id="strategy-head"></thead>
+            <tbody id="strategy-body"></tbody>
+          </table>
+        </div>
+
+        <div class="legend" style="margin-top:1rem">
+          <span class="legend__item act-H">H — Hit</span>
+          <span class="legend__item act-S">S — Stand</span>
+          <span class="legend__item act-D">D — Double, otherwise hit</span>
+          <span class="legend__item act-Ds">Ds — Double, otherwise stand</span>
+          <span class="legend__item act-P">P — Split</span>
+        </div>
+      </section>
+
+      <!-- Illustrious 18 -->
+      <section class="card" aria-labelledby="index-heading">
+        <div class="card__header">
+          <h2 class="card__title" id="index-heading">The Illustrious 18</h2>
+          <span class="pill" id="index-result-count"></span>
+        </div>
+
+        <div class="row row--wide row--middle">
+          <div class="field grow" style="flex-basis:240px">
+            <label class="label" for="index-search">Search a hand or upcard</label>
+            <input class="input" type="search" id="index-search" placeholder="e.g. 16, insurance, or A">
+          </div>
+          <div class="field" style="flex-basis:200px">
+            <label class="label" for="index-tc">Preview at true count</label>
+            <input class="input" type="number" id="index-tc" value="0" min="-10" max="10" step="1">
+          </div>
+        </div>
+
+        <ul class="list scroll-y" id="index-play-list" style="margin-top:1rem" aria-live="polite"></ul>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <div class="toast-stack" role="status" aria-live="polite"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/strategy.js"></script>
+  <script src="js/learn.js"></script>
+</body>
+</html>

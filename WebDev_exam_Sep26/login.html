@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sign in · TrueCount</title>
+
+  <!-- SEO metadata -->
+  <meta name="description" content="Sign in to TrueCount, a browser-based blackjack card-counting trainer with a live count engine and a basic-strategy reference.">
+  <meta name="keywords" content="blackjack, card counting, hi-lo, true count, trainer, practice, basic strategy">
+  <meta name="author" content="Andrei Bertea">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#08120e">
+  <link rel="canonical" href="login.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TrueCount — Blackjack Card Counting Trainer">
+  <meta property="og:description" content="Track a live running and true count across five counting systems, and learn the index plays that matter.">
+  <meta property="og:locale" content="en_GB">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23e3b95f'/><text x='16' y='24' font-size='22' text-anchor='middle' fill='%230b1a13'>♠</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-site-header></header>
+
+  <main class="login-shell" id="main">
+    <div class="login-panel">
+
+      <!-- Marketing side: hidden on small screens via media query -->
+      <aside class="login-panel__aside">
+        <p class="section-label">Blackjack card counting</p>
+        <h1>Count the shoe,<br>not the cards.</h1>
+        <p class="muted">A practice tool for the maths behind advantage play — running count, true count, deck penetration and the deviations that actually pay.</p>
+
+        <ul class="stack stack--tight list" style="margin-top:.5rem">
+          <li class="login-feature">
+            <span class="login-feature__icon" aria-hidden="true">♠</span>
+            <span><strong>Five counting systems</strong><br><span class="faint">Hi-Lo, KO, Hi-Opt I, Zen and Omega II — balanced and unbalanced.</span></span>
+          </li>
+          <li class="login-feature">
+            <span class="login-feature__icon" aria-hidden="true">♦</span>
+            <span><strong>Full basic strategy</strong><br><span class="faint">Hard totals, soft totals and pairs, with real cards drawn over the network.</span></span>
+          </li>
+          <li class="login-feature">
+            <span class="login-feature__icon" aria-hidden="true">♣</span>
+            <span><strong>Live index plays</strong><br><span class="faint">The Illustrious 18, surfaced the moment the count turns them on.</span></span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Form #1: the simulated login -->
+      <section class="login-panel__form" aria-labelledby="login-heading">
+        <h2 id="login-heading">Sign in</h2>
+        <p class="muted" style="font-size:.875rem">This is a simulated login — no data leaves your browser.</p>
+
+        <div class="alert" id="login-alert" role="alert" hidden></div>
+
+        <form id="login-form" class="stack" novalidate>
+          <div class="field">
+            <label class="label" for="username">Username</label>
+            <input class="input" type="text" id="username" name="username"
+                   autocomplete="username" placeholder="dealer" required
+                   aria-describedby="username-error">
+            <p class="field__error" id="username-error" aria-live="polite"></p>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">
+              Password <span class="label__hint">— at least 8 characters</span>
+            </label>
+            <div class="input-group">
+              <input class="input" type="password" id="password" name="password"
+                     autocomplete="current-password" placeholder="••••••••" required
+                     aria-describedby="password-error">
+              <button class="btn" type="button" id="toggle-password"
+                      aria-label="Show password" aria-pressed="false">Show</button>
+            </div>
+            <p class="field__error" id="password-error" aria-live="polite"></p>
+          </div>
+
+          <label class="checkbox">
+            <input type="checkbox" id="remember" name="remember">
+            <span>Keep me signed in on this device</span>
+          </label>
+
+          <button class="btn btn--primary btn--lg btn--block" type="submit" id="login-submit">
+            Enter the pit
+          </button>
+
+          <p class="form-note">
+            <strong>Demo credentials</strong> — username <code>dealer</code>, password <code>blackjack21</code>.
+            <button class="btn btn--sm" type="button" id="fill-demo" style="margin-top:.5rem">Fill them in</button>
+          </p>
+        </form>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <div class="toast-stack" role="status" aria-live="polite"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
